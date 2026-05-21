@@ -1,0 +1,44 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [ "main" ] # Déclenche le déploiement lors d'un push sur la branche main
+
+jobs:
+  deploy:
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupérer le code source du dépôt
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Configurer les identifiants AWS
+      # Ces secrets doivent être configurés dans les paramètres du dépôt GitHub
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3 # Région Paris (à adapter si besoin)
+
+      # 3. Se connecter à Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 4. Construire l'image Docker, lui mettre un tag, et l'envoyer sur ECR
+      - name: Build, Tag, and Push Image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: artislink-repo # Le nom que vous avez donné à votre dépôt ECR
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      # Optionnel : Forcer le déploiement sur App Runner si le déploiement automatique n'est pas activé
+      # - name: Deploy to App Runner
+      #   run: |
+      #     aws apprunner start-deployment --service-arn ${{ secrets.AWS_APP_RUNNER_SERVICE_ARN }}
