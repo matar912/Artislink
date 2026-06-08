@@ -19,7 +19,7 @@ class VerifierRole
         // Cas 1 : L'utilisateur n'est pas connecté
         // → On le redirige vers la page de connexion
         if (! $request->user()) {
-            return redirect()->route('connexion');
+            return redirect()->route('login');
         }
 
         // Cas 2 : Le compte est désactivé
@@ -27,7 +27,7 @@ class VerifierRole
         if (! $request->user()->est_actif) {
             Auth::logout();
             return redirect()
-                ->route('connexion')
+                ->route('login')
                 ->withErrors(['email' => 'Votre compte a été désactivé.']);
         }
 

@@ -31,8 +31,10 @@ Route::get('/artisans/{artisan}', [RechercheControleur::class, 'voirArtisan'])->
 // ============================================================
 
 Route::middleware('guest')->group(function () {
-    Route::get('/connexion', [ConnexionControleur::class, 'pageConnexion'])->name('connexion');
+    Route::get('/connexion', [ConnexionControleur::class, 'pageConnexion'])->name('login');
     Route::post('/connexion', [ConnexionControleur::class, 'connecter'])->name('connexion.traiter');
+    
+    Route::get('/inscription', [ConnexionControleur::class, 'pageChoixInscription'])->name('inscription');
     Route::get('/inscription/artisan', [ConnexionControleur::class, 'pageInscriptionArtisan'])->name('inscription.artisan');
     Route::post('/inscription/artisan', [ConnexionControleur::class, 'inscrireArtisan'])->name('inscription.artisan.traiter');
     Route::get('/inscription/visiteur', [ConnexionControleur::class, 'pageInscriptionVisiteur'])->name('inscription.visiteur');
@@ -78,6 +80,7 @@ Route::middleware(['auth', 'role:artisan'])
     Route::post('/mes-produits', [ProduitControleur::class, 'creer'])->name('produits.creer');
     Route::get('/mes-produits/{produit}/modifier', [ProduitControleur::class, 'formulaireModification'])->name('produits.formulaire-modification');
     Route::put('/mes-produits/{produit}', [ProduitControleur::class, 'modifier'])->name('produits.modifier');
+    Route::patch('/mes-produits/{produit}/stock', [ProduitControleur::class, 'mettreAJourStock'])->name('produits.stock');
     Route::delete('/mes-produits/{produit}', [ProduitControleur::class, 'supprimer'])->name('produits.supprimer');
 
     // ── Commandes (côté artisan) ─────────────────────────────
@@ -100,6 +103,13 @@ Route::middleware(['auth', 'role:visiteur'])
     ->group(function () {
 
     Route::get('/tableau-bord', [CommandeControleur::class, 'lister'])->name('tableau-bord');
+    Route::get('/boutique', [RechercheControleur::class, 'boutique'])->name('boutique');
+    Route::get('/panier', function () {
+        return Inertia\Inertia::render('Visitor/Panier');
+    })->name('panier');
+    Route::get('/checkout', function () {
+        return Inertia\Inertia::render('Visitor/Checkout');
+    })->name('checkout');
 
     // ── Commandes ────────────────────────────────────────────
     Route::get('/mes-commandes', [CommandeControleur::class, 'lister'])->name('commandes.liste');

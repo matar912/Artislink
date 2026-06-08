@@ -75,14 +75,20 @@ class CommandeControleur extends Controller
 
             $commande->update(['montant_total' => $total]);
 
+            // Notifier les artisans concernés
+            $artisanIds = $commande->produits()->pluck('artisan_id')->unique();
+            foreach ($artisanIds as $artisanId) {
+                event(new \App\Events\NouvelleCommandeRecue($commande, $artisanId));
+            }
+
             DB::commit();
 
             return redirect()->route('visiteur.commandes.liste')
-                             ->with('success', 'Votre commande a été enregistrée avec succès.');
+                             ->with('succes', 'Votre commande a été enregistrée avec succès.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Une erreur est survenue lors de la commande.');
+            return back()->with('erreur', 'Une erreur est survenue lors de la commande.');
         }
     }
 
@@ -96,11 +102,11 @@ class CommandeControleur extends Controller
         }
 
         if ($commande->statut !== 'en_attente') {
-            return back()->with('error', 'Cette commande ne peut plus être annulée.');
+            return back()->with('erreur', 'Cette commande ne peut plus être annulée.');
         }
 
         $commande->update(['statut' => 'annulee']);
 
-        return back()->with('success', 'Commande annulée.');
+        return back()->with('succes', 'Commande annulée.');
     }
 }

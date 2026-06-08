@@ -25,6 +25,8 @@ class User extends Authenticatable
 
     protected $appends = [
         'name',
+        'dashboard_route',
+        'avatar_url',
     ];
 
     protected $hidden = [
@@ -78,7 +80,7 @@ class User extends Authenticatable
         return match ($this->role) {
             'artisan' => route('artisan.tableau-bord'),
             'admin'   => route('admin.tableau-bord'),
-            default   => route('visiteur.tableau-bord'),
+            default   => route('visiteur.boutique'),
         };
     }
 }

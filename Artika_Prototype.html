@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Artika — Artisanat Sénégalais</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand:    #f5e6c8;
+  --earth:   #c17f3b;
+  --terr:    #8b4513;
+  --deep:    #1a0f00;
+  --green:   #2d5a27;
+  --gold:    #d4a017;
+  --cream:   #fdf6e9;
+  --muted:   #7a6248;
+  --white:   #ffffff;
+  --danger:  #c0392b;
+  --radius:  14px;
+  --shadow:  0 4px 24px rgba(26,15,0,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--deep);min-height:100vh;}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh;animation:fadeIn .25s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(253,246,233,0.95);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(193,127,59,0.2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 40px;
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;font-size:26px;font-weight:700;
+  color:var(--terr);cursor:pointer;letter-spacing:-0.5px;
+}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;align-items:center;gap:28px;}
+.nav-link{
+  font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;
+  transition:color .15s;text-decoration:none;
+}
+.nav-link:hover{color:var(--terr);}
+.nav-btn{
+  background:var(--terr);color:var(--white);border:none;
+  border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:opacity .15s;
+}
+.nav-btn:hover{opacity:.85;}
+.nav-btn.outline{background:transparent;border:1.5px solid var(--terr);color:var(--terr);}
+.badge-verified{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(45,90,39,0.12);color:var(--green);
+  font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+
+/* ── HERO ── */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#1a0f00 0%,#3d1f00 50%,#5c2e00 100%);
+  min-height:88vh;display:flex;align-items:center;
+}
+.hero-pattern{
+  position:absolute;inset:0;opacity:.06;
+  background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);
+  background-size:20px 20px;
+}
+.hero-content{position:relative;z-index:2;padding:60px 40px;max-width:600px;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(212,160,23,0.2);color:var(--gold);
+  font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;
+  margin-bottom:24px;text-transform:uppercase;letter-spacing:1px;
+}
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(36px,5vw,62px);color:var(--white);
+  line-height:1.15;margin-bottom:20px;letter-spacing:-1px;
+}
+.hero-title em{color:var(--gold);font-style:italic;}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:36px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--earth));
+  color:var(--deep);border:none;border-radius:10px;padding:14px 28px;
+  font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:0 4px 16px rgba(212,160,23,0.4);
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(212,160,23,0.5);}
+.btn-ghost{
+  background:rgba(255,255,255,.1);color:var(--white);
+  border:1.5px solid rgba(255,255,255,.25);
+  border-radius:10px;padding:14px 28px;font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:all .15s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.18);}
+.hero-img{
+  position:absolute;right:0;top:0;bottom:0;width:45%;
+  background:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800') center/cover;
+  opacity:.35;
+}
+.hero-stats{
+  display:flex;gap:40px;margin-top:50px;
+}
+.stat-item{color:rgba(255,255,255,.7);}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);display:block;}
+.stat-lbl{font-size:12px;margin-top:2px;}
+
+/* ── SECTIONS ── */
+.section{padding:64px 40px;}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;}
+.section-title{font-family:'Playfair Display',serif;font-size:30px;letter-spacing:-.5px;}
+.section-sub{color:var(--muted);font-size:14px;margin-top:6px;}
+.see-all{font-size:13px;color:var(--earth);font-weight:600;cursor:pointer;text-decoration:underline;}
+
+/* ── CATEGORIES ── */
+.categories{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px;}
+.cat-chip{
+  display:flex;align-items:center;gap:6px;
+  background:var(--white);border:1.5px solid rgba(193,127,59,0.2);
+  border-radius:24px;padding:8px 16px;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .15s;color:var(--muted);
+}
+.cat-chip:hover,.cat-chip.active{
+  background:var(--terr);color:var(--white);border-color:var(--terr);
+}
+.cat-icon{font-size:16px;}
+
+/* ── PRODUCT GRID ── */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;}
+.product-card{
+  background:var(--white);border-radius:var(--radius);overflow:hidden;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .2s,box-shadow .2s;
+}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(26,15,0,0.14);}
+.product-img{
+  width:100%;height:200px;object-fit:cover;
+  background:linear-gradient(135deg,#e8d5b0,#c9a96e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;position:relative;
+}
+.product-fav{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,.9);border:none;border-radius:50%;
+  width:32px;height:32px;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.product-body{padding:16px;}
+.product-name{font-weight:600;font-size:14px;margin-bottom:4px;}
+.product-artisan{font-size:12px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:4px;}
+.product-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+.product-price{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--terr);}
+.product-price span{font-size:11px;font-family:'DM Sans',sans-serif;color:var(--muted);font-weight:400;}
+.btn-cart{
+  background:var(--terr);color:var(--white);border:none;
+  border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:opacity .15s;
+}
+.btn-cart:hover{opacity:.85;}
+
+/* ── ARTISANS FEATURED ── */
+.artisans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;}
+.artisan-card{
+  background:var(--white);border-radius:var(--radius);padding:24px;text-align:center;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .2s;
+}
+.artisan-card:hover{transform:translateY(-3px);}
+.artisan-avatar{
+  width:72px;height:72px;border-radius:50%;margin:0 auto 12px;
+  background:linear-gradient(135deg,var(--earth),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;color:var(--white);font-weight:700;
+  font-family:'Playfair Display',serif;
+}
+.artisan-name{font-weight:600;font-size:14px;margin-bottom:4px;}
+.artisan-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
+
+/* ── FILTERS ── */
+.filters-bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:16px 0;margin-bottom:24px;
+  border-bottom:1px solid rgba(193,127,59,0.15);
+}
+.filter-select{
+  background:var(--white);border:1.5px solid rgba(193,127,59,0.2);
+  border-radius:8px;padding:8px 14px;font-size:13px;font-family:inherit;
+  color:var(--deep);cursor:pointer;outline:none;
+}
+.filter-select:focus{border-color:var(--earth);}
+.search-bar{
+  flex:1;max-width:320px;
+  background:var(--white);border:1.5px solid rgba(193,127,59,0.2);
+  border-radius:8px;padding:8px 14px;font-size:13px;font-family:inherit;
+  color:var(--deep);outline:none;
+}
+.search-bar:focus{border-color:var(--earth);}
+
+/* ── PRODUCT DETAIL ── */
+.product-detail{padding:40px;}
+.product-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+.product-main-img{
+  width:100%;aspect-ratio:1;border-radius:16px;
+  background:linear-gradient(135deg,#e8d5b0,#c9a96e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;
+}
+.product-thumbs{display:flex;gap:10px;margin-top:12px;}
+.thumb{
+  width:60px;height:60px;border-radius:8px;
+  background:linear-gradient(135deg,#d4b896,#b8935a);
+  cursor:pointer;border:2px solid transparent;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.thumb.active{border-color:var(--earth);}
+.product-story{
+  background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(193,127,59,.06));
+  border:1px solid rgba(212,160,23,.2);border-radius:12px;
+  padding:20px;margin:20px 0;
+}
+.story-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--gold);margin-bottom:8px;
+}
+.story-text{font-size:13px;color:var(--muted);line-height:1.7;}
+.qty-control{display:flex;align-items:center;gap:12px;margin:16px 0;}
+.qty-btn{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--sand);border:none;font-size:18px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:var(--terr);
+}
+.qty-val{font-size:18px;font-weight:600;min-width:30px;text-align:center;}
+
+/* ── DASHBOARD ARTISAN ── */
+.dashboard{display:grid;grid-template-columns:240px 1fr;min-height:100vh;}
+.dash-sidebar{
+  background:var(--deep);padding:28px 20px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.dash-logo{
+  font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);
+  margin-bottom:32px;padding:0 8px;cursor:pointer;
+}
+.dash-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:8px;cursor:pointer;
+  color:rgba(255,255,255,.55);font-size:13px;font-weight:500;
+  transition:all .15s;
+}
+.dash-item:hover{background:rgba(255,255,255,.07);color:var(--white);}
+.dash-item.active{background:rgba(212,160,23,.15);color:var(--gold);}
+.dash-icon{font-size:18px;width:22px;text-align:center;}
+.dash-content{background:var(--cream);padding:36px;}
+.dash-header{margin-bottom:28px;}
+.dash-title{font-family:'Playfair Display',serif;font-size:26px;}
+.dash-sub{color:var(--muted);font-size:13px;margin-top:4px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.kpi-card{
+  background:var(--white);border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow);border-left:4px solid var(--c,var(--earth));
+}
+.kpi-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;}
+.kpi-lbl{font-size:12px;color:var(--muted);margin-top:4px;}
+.orders-table{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.table-header{
+  display:grid;grid-template-columns:1fr 2fr 1fr 1.2fr 1fr;
+  padding:12px 20px;background:var(--sand);
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--muted);
+}
+.table-row{
+  display:grid;grid-template-columns:1fr 2fr 1fr 1.2fr 1fr;
+  padding:14px 20px;border-bottom:1px solid rgba(193,127,59,.1);
+  font-size:13px;align-items:center;transition:background .1s;cursor:pointer;
+}
+.table-row:hover{background:rgba(245,230,200,.3);}
+.status-badge{
+  display:inline-flex;align-items:center;
+  font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
+}
+.s-received{background:rgba(212,160,23,.12);color:#9a7010;}
+.s-confirmed{background:rgba(45,90,39,.12);color:var(--green);}
+.s-preparing{background:rgba(193,127,59,.15);color:var(--earth);}
+.s-shipped{background:rgba(45,90,39,.2);color:var(--green);}
+.s-delivered{background:rgba(45,90,39,.25);color:var(--green);}
+
+/* ── PANIER ── */
+.cart-layout{display:grid;grid-template-columns:1fr 380px;gap:32px;padding:40px;}
+.cart-items{background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+.cart-item{
+  display:grid;grid-template-columns:80px 1fr auto;gap:16px;
+  padding:16px 0;border-bottom:1px solid rgba(193,127,59,.1);
+  align-items:center;
+}
+.cart-item-img{
+  width:80px;height:80px;border-radius:10px;
+  background:linear-gradient(135deg,#e8d5b0,#c9a96e);
+  display:flex;align-items:center;justify-content:center;font-size:32px;
+}
+.cart-item-name{font-weight:600;font-size:14px;}
+.cart-item-artisan{font-size:12px;color:var(--muted);margin-top:2px;}
+.cart-item-price{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--terr);}
+.cart-summary{
+  background:var(--white);border-radius:var(--radius);padding:24px;
+  box-shadow:var(--shadow);height:fit-content;position:sticky;top:90px;
+}
+.summary-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;}
+.summary-row.total{
+  font-weight:700;font-size:16px;border-top:2px solid var(--sand);
+  margin-top:8px;padding-top:16px;color:var(--terr);
+}
+.payment-methods{margin-top:20px;}
+.pay-method{
+  display:flex;align-items:center;gap:10px;
+  border:2px solid var(--sand);border-radius:10px;padding:14px;
+  cursor:pointer;margin-bottom:10px;transition:border-color .15s;
+}
+.pay-method.selected{border-color:var(--earth);}
+.pay-icon{width:36px;height:36px;border-radius:8px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.pay-name{font-weight:600;font-size:13px;}
+.pay-desc{font-size:11px;color:var(--muted);}
+
+/* ── ADMIN ── */
+.admin-header{
+  background:var(--deep);color:var(--white);
+  padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+}
+.admin-logo{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);}
+.admin-body{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px);}
+.admin-sidebar{background:#120b00;padding:20px 12px;}
+.admin-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:8px;cursor:pointer;
+  color:rgba(255,255,255,.5);font-size:13px;margin-bottom:2px;
+  transition:all .15s;
+}
+.admin-item:hover,.admin-item.active{background:rgba(212,160,23,.12);color:var(--gold);}
+.admin-content{padding:28px;background:var(--cream);}
+.artisan-verify-list{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);}
+.verify-row{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;border-bottom:1px solid rgba(193,127,59,.1);
+}
+.verify-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--earth),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;color:var(--white);flex-shrink:0;
+}
+.verify-info{flex:1;}
+.verify-name{font-weight:600;font-size:14px;}
+.verify-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.verify-actions{display:flex;gap:8px;}
+.btn-approve{
+  background:var(--green);color:var(--white);border:none;
+  border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+}
+.btn-reject{
+  background:transparent;color:var(--danger);border:1.5px solid var(--danger);
+  border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+}
+
+/* ── LOGIN ── */
+.login-page{
+  min-height:100vh;display:grid;grid-template-columns:1fr 1fr;
+}
+.login-left{
+  background:linear-gradient(160deg,#1a0f00,#3d1f00);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px;position:relative;overflow:hidden;
+}
+.login-left::before{
+  content:'';position:absolute;inset:0;opacity:.05;
+  background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 30px);
+  background-size:30px 30px;
+}
+.login-brand{position:relative;text-align:center;}
+.login-brand-name{
+  font-family:'Playfair Display',serif;font-size:52px;color:var(--gold);
+  margin-bottom:16px;
+}
+.login-brand-tagline{color:rgba(255,255,255,.55);font-size:16px;line-height:1.6;}
+.login-right{
+  background:var(--cream);display:flex;align-items:center;justify-content:center;padding:60px;
+}
+.login-form{width:100%;max-width:380px;}
+.login-title{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px;}
+.login-sub{color:var(--muted);font-size:14px;margin-bottom:32px;}
+.form-group{margin-bottom:18px;}
+.form-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;}
+.form-input{
+  width:100%;background:var(--white);border:1.5px solid rgba(193,127,59,.2);
+  border-radius:10px;padding:12px 16px;font-size:14px;font-family:inherit;
+  color:var(--deep);outline:none;transition:border-color .2s;
+}
+.form-input:focus{border-color:var(--earth);}
+.role-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:24px;}
+.role-tab{
+  padding:10px;text-align:center;border-radius:8px;cursor:pointer;
+  font-size:12px;font-weight:600;border:1.5px solid rgba(193,127,59,.2);
+  color:var(--muted);transition:all .15s;
+}
+.role-tab.active{background:var(--terr);color:var(--white);border-color:var(--terr);}
+.btn-submit{
+  width:100%;background:linear-gradient(135deg,var(--terr),var(--earth));
+  color:var(--white);border:none;border-radius:10px;padding:14px;
+  font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
+  box-shadow:0 4px 16px rgba(139,69,19,.35);transition:transform .15s;
+  margin-top:8px;
+}
+.btn-submit:hover{transform:translateY(-1px);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  background:var(--deep);color:var(--white);
+  border-radius:10px;padding:14px 20px;font-size:13px;font-weight:500;
+  box-shadow:0 4px 24px rgba(0,0,0,.3);
+  transform:translateY(80px);opacity:0;
+  transition:all .3s ease;pointer-events:none;
+  display:flex;align-items:center;gap:10px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* ── MISC ── */
+.back-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--muted);font-size:13px;cursor:pointer;
+  margin-bottom:20px;padding:8px 0;
+}
+.back-btn:hover{color:var(--terr);}
+.divider{height:1px;background:rgba(193,127,59,.15);margin:32px 0;}
+.section-dark{background:var(--deep);padding:64px 40px;}
+.section-dark .section-title{color:var(--white);}
+.artisan-cta{
+  max-width:560px;
+}
+.artisan-cta p{color:rgba(255,255,255,.6);font-size:15px;line-height:1.7;margin:16px 0 28px;}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;}
+.step{text-align:center;color:rgba(255,255,255,.8);}
+.step-num{
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(212,160,23,.2);border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);
+  margin:0 auto 12px;
+}
+.step p{font-size:13px;line-height:1.6;margin-top:6px;color:rgba(255,255,255,.5);}
+
+@media(max-width:768px){
+  nav{padding:12px 20px;}
+  .hero-content{padding:40px 20px;}
+  .section{padding:40px 20px;}
+  .product-detail-grid,.cart-layout,.login-page,.dashboard,.admin-body{grid-template-columns:1fr;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .hero-img{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 1 : ACCUEIL
+══════════════════════════════════════════════════════ -->
+<div id="p-home" class="page active">
+  <nav>
+    <div class="nav-logo" onclick="go('p-home')">Artik<span>a</span></div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="go('p-shop')">Boutique</span>
+      <span class="nav-link" onclick="go('p-artisans')">Artisans</span>
+      <span class="nav-link">À propos</span>
+      <span class="nav-link" onclick="go('p-cart')">🛒 Panier <sup style="background:var(--terr);color:#fff;border-radius:50%;padding:1px 5px;font-size:10px;">2</sup></span>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="nav-btn outline" onclick="go('p-login')">Connexion</button>
+      <button class="nav-btn" onclick="go('p-login')">S'inscrire</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-pattern"></div>
+    <div class="hero-img"></div>
+    <div class="hero-content">
+      <div class="hero-tag">✦ Authentique &amp; Vérifié</div>
+      <h1 class="hero-title">L'artisanat<br/>sénégalais,<br/><em>à portée de main</em></h1>
+      <p class="hero-sub">Découvrez des créations uniques directement auprès des artisans de Dakar, Saint-Louis et Saly. Chaque objet raconte une histoire.</p>
+      <div class="hero-actions">
+        <button class="btn-gold" onclick="go('p-shop')">Explorer la boutique →</button>
+        <button class="btn-ghost" onclick="go('p-login')">Je suis artisan</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num">127</span><span class="stat-lbl">Artisans vérifiés</span></div>
+        <div class="stat-item"><span class="stat-num">840+</span><span class="stat-lbl">Créations uniques</span></div>
+        <div class="stat-item"><span class="stat-num">3 villes</span><span class="stat-lbl">Couvertes</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Catégories -->
+  <div class="section">
+    <div class="section-header">
+      <div><div class="section-title">Explorez par catégorie</div></div>
+    </div>
+    <div class="categories">
+      <div class="cat-chip active"><span class="cat-icon">🏺</span> Poterie</div>
+      <div class="cat-chip"><span class="cat-icon">🧵</span> Textile</div>
+      <div class="cat-chip"><span class="cat-icon">🪵</span> Sculpture</div>
+      <div class="cat-chip"><span class="cat-icon">💍</span> Bijoux</div>
+      <div class="cat-chip"><span class="cat-icon">👜</span> Maroquinerie</div>
+      <div class="cat-chip"><span class="cat-icon">🍯</span> Gastronomie</div>
+    </div>
+
+    <!-- Produits -->
+    <div class="products-grid">
+      <div class="product-card" onclick="go('p-product')">
+        <div class="product-img">🏺<button class="product-fav">♡</button></div>
+        <div class="product-body">
+          <div class="product-name">Vase Terracotta Traditionnel</div>
+          <div class="product-artisan"><span class="badge-verified">✓ Vérifié</span> Aminata Diallo</div>
+          <div class="product-footer">
+            <div class="product-price">12 500 <span>FCFA</span></div>
+            <button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card" onclick="go('p-product')">
+        <div class="product-img">🧵<button class="product-fav">♡</button></div>
+        <div class="product-body">
+          <div class="product-name">Tissu Wax Bogolan</div>
+          <div class="product-artisan"><span class="badge-verified">✓ Vérifié</span> Moussa Sarr</div>
+          <div class="product-footer">
+            <div class="product-price">8 000 <span>FCFA</span></div>
+            <button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card" onclick="go('p-product')">
+        <div class="product-img">💍<button class="product-fav">♡</button></div>
+        <div class="product-body">
+          <div class="product-name">Collier Perles Baoulé</div>
+          <div class="product-artisan"><span class="badge-verified">✓ Vérifié</span> Fatou Ndiaye</div>
+          <div class="product-footer">
+            <div class="product-price">6 500 <span>FCFA</span></div>
+            <button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card" onclick="go('p-product')">
+        <div class="product-img">🪵<button class="product-fav">♡</button></div>
+        <div class="product-body">
+          <div class="product-name">Masque Sénoufo en Bois</div>
+          <div class="product-artisan">Ibrahima Koné</div>
+          <div class="product-footer">
+            <div class="product-price">22 000 <span>FCFA</span></div>
+            <button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Artisans vedettes -->
+  <div class="section" style="background:var(--sand);padding:48px 40px;">
+    <div class="section-header">
+      <div><div class="section-title">Artisans vérifiés</div><div class="section-sub">Rencontrez les créateurs derrière chaque objet</div></div>
+      <span class="see-all" onclick="go('p-artisans')">Voir tous →</span>
+    </div>
+    <div class="artisans-grid">
+      <div class="artisan-card" onclick="go('p-artisans')">
+        <div class="artisan-avatar">A</div>
+        <div class="artisan-name">Aminata Diallo</div>
+        <div class="artisan-meta">Poterie · Dakar</div>
+        <span class="badge-verified">✓ Artisan Vérifié</span>
+      </div>
+      <div class="artisan-card" onclick="go('p-artisans')">
+        <div class="artisan-avatar">M</div>
+        <div class="artisan-name">Moussa Sarr</div>
+        <div class="artisan-meta">Textile · Saint-Louis</div>
+        <span class="badge-verified">✓ Artisan Vérifié</span>
+      </div>
+      <div class="artisan-card" onclick="go('p-artisans')">
+        <div class="artisan-avatar">F</div>
+        <div class="artisan-name">Fatou Ndiaye</div>
+        <div class="artisan-meta">Bijoux · Saly</div>
+        <span class="badge-verified">✓ Artisan Vérifié</span>
+      </div>
+      <div class="artisan-card" onclick="go('p-artisans')">
+        <div class="artisan-avatar">I</div>
+        <div class="artisan-name">Ibrahima Koné</div>
+        <div class="artisan-meta">Sculpture · Dakar</div>
+        <span class="badge-verified">✓ Artisan Vérifié</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Artisan -->
+  <div class="section-dark">
+    <div class="artisan-cta">
+      <div class="hero-tag">✦ Rejoignez Artika</div>
+      <div class="section-title" style="color:var(--white);font-family:'Playfair Display',serif;font-size:32px;margin-top:16px;">Vous êtes artisan ?<br/>Vendez vos créations en ligne</div>
+      <p>Rejoignez plus de 127 artisans vérifiés et touchez des milliers de clients locaux et internationaux. C'est gratuit pour commencer.</p>
+      <button class="btn-gold" onclick="go('p-login')">Créer mon espace artisan →</button>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><strong>Inscrivez-vous</strong><p>Créez votre profil et décrivez votre atelier</p></div>
+      <div class="step"><div class="step-num">2</div><strong>Vérification</strong><p>L'équipe Artika vérifie votre identité et atelier</p></div>
+      <div class="step"><div class="step-num">3</div><strong>Vendez !</strong><p>Publiez vos créations et recevez des commandes</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 2 : BOUTIQUE
+══════════════════════════════════════════════════════ -->
+<div id="p-shop" class="page">
+  <nav>
+    <div class="nav-logo" onclick="go('p-home')">Artik<span>a</span></div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="go('p-home')">Accueil</span>
+      <span class="nav-link" style="color:var(--terr);font-weight:600;">Boutique</span>
+      <span class="nav-link" onclick="go('p-artisans')">Artisans</span>
+      <span class="nav-link" onclick="go('p-cart')">🛒 Panier</span>
+    </div>
+    <button class="nav-btn" onclick="go('p-login')">Mon compte</button>
+  </nav>
+  <div class="section">
+    <div class="section-header">
+      <div><div class="section-title">Toute la boutique</div><div class="section-sub">840 créations disponibles</div></div>
+    </div>
+    <div class="filters-bar">
+      <input class="search-bar" placeholder="🔍  Rechercher un produit, un artisan..."/>
+      <select class="filter-select"><option>Toutes catégories</option><option>Poterie</option><option>Textile</option><option>Bijoux</option><option>Sculpture</option></select>
+      <select class="filter-select"><option>Toutes régions</option><option>Dakar</option><option>Saint-Louis</option><option>Saly</option></select>
+      <select class="filter-select"><option>Prix : tous</option><option>0–5 000 FCFA</option><option>5–15 000 FCFA</option><option>+15 000 FCFA</option></select>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+        <input type="checkbox" style="accent-color:var(--terr);"/> Artisans vérifiés uniquement
+      </label>
+    </div>
+    <div class="categories" style="margin-bottom:24px;">
+      <div class="cat-chip active">Tout</div>
+      <div class="cat-chip"><span class="cat-icon">🏺</span> Poterie</div>
+      <div class="cat-chip"><span class="cat-icon">🧵</span> Textile</div>
+      <div class="cat-chip"><span class="cat-icon">🪵</span> Sculpture</div>
+      <div class="cat-chip"><span class="cat-icon">💍</span> Bijoux</div>
+      <div class="cat-chip"><span class="cat-icon">👜</span> Maroquinerie</div>
+      <div class="cat-chip"><span class="cat-icon">🍯</span> Gastronomie</div>
+    </div>
+    <div class="products-grid">
+      <div class="product-card" onclick="go('p-product')"><div class="product-img">🏺<button class="product-fav">♡</button></div><div class="product-body"><div class="product-name">Vase Terracotta</div><div class="product-artisan"><span class="badge-verified">✓</span> Aminata Diallo</div><div class="product-footer"><div class="product-price">12 500 <span>FCFA</span></div><button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button></div></div></div>
+      <div class="product-card" onclick="go('p-product')"><div class="product-img">🧵<button class="product-fav">♡</button></div><div class="product-body"><div class="product-name">Tissu Wax Bogolan</div><div class="product-artisan"><span class="badge-verified">✓</span> Moussa Sarr</div><div class="product-footer"><div class="product-price">8 000 <span>FCFA</span></div><button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button></div></div></div>
+      <div class="product-card" onclick="go('p-product')"><div class="product-img">💍<button class="product-fav">♡</button></div><div class="product-body"><div class="product-name">Collier Perles Baoulé</div><div class="product-artisan"><span class="badge-verified">✓</span> Fatou Ndiaye</div><div class="product-footer"><div class="product-price">6 500 <span>FCFA</span></div><button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button></div></div></div>
+      <div class="product-card" onclick="go('p-product')"><div class="product-img">🪵<button class="product-fav">♡</button></div><div class="product-body"><div class="product-name">Masque Sénoufo</div><div class="product-artisan">Ibrahima Koné</div><div class="product-footer"><div class="product-price">22 000 <span>FCFA</span></div><button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button></div></div></div>
+      <div class="product-card" onclick="go('p-product')"><div class="product-img">👜<button class="product-fav">♡</button></div><div class="product-body"><div class="product-name">Sac Cuir Tressé</div><div class="product-artisan"><span class="badge-verified">✓</span> Omar Gueye</div><div class="product-footer"><div class="product-price">35 000 <span>FCFA</span></div><button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button></div></div></div>
+      <div class="product-card" onclick="go('p-product')"><div class="product-img">🍯<button class="product-fav">♡</button></div><div class="product-body"><div class="product-name">Miel de Baobab Bio</div><div class="product-artisan"><span class="badge-verified">✓</span> Rokhaya Fall</div><div class="product-footer"><div class="product-price">4 500 <span>FCFA</span></div><button class="btn-cart" onclick="event.stopPropagation();showToast('Ajouté au panier 🛒')">+ Panier</button></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 3 : FICHE PRODUIT
+══════════════════════════════════════════════════════ -->
+<div id="p-product" class="page">
+  <nav>
+    <div class="nav-logo" onclick="go('p-home')">Artik<span>a</span></div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="go('p-shop')">Boutique</span>
+      <span class="nav-link" onclick="go('p-cart')">🛒 Panier</span>
+    </div>
+    <button class="nav-btn" onclick="go('p-login')">Mon compte</button>
+  </nav>
+  <div class="product-detail">
+    <div class="back-btn" onclick="go('p-shop')">← Retour à la boutique</div>
+    <div class="product-detail-grid">
+      <div>
+        <div class="product-main-img">🏺</div>
+        <div class="product-thumbs">
+          <div class="thumb active">🏺</div>
+          <div class="thumb">🏛️</div>
+          <div class="thumb">🎨</div>
+          <div class="thumb">✨</div>
+        </div>
+      </div>
+      <div>
+        <span class="badge-verified" style="margin-bottom:12px;display:inline-flex;">✓ Artisan Vérifié</span>
+        <h1 style="font-family:'Playfair Display',serif;font-size:32px;letter-spacing:-.5px;margin:8px 0;">Vase Terracotta Traditionnel</h1>
+        <div style="color:var(--muted);font-size:14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+          Par <strong style="color:var(--terr);cursor:pointer;">Aminata Diallo</strong> · Poterie · Dakar
+        </div>
+        <div style="font-size:32px;font-family:'Playfair Display',serif;font-weight:700;color:var(--terr);margin-bottom:20px;">
+          12 500 <span style="font-size:16px;font-family:'DM Sans',sans-serif;color:var(--muted);">FCFA</span>
+        </div>
+
+        <div class="product-story">
+          <div class="story-label">✦ L'histoire de ce produit</div>
+          <div class="story-text">Ce vase a été façonné à la main selon la technique ancestrale de la poterie Sénoufo, transmise de mère en fille depuis 5 générations. La terre rouge provient des berges du fleuve Sénégal. Le séchage naturel dure 3 semaines avant la cuisson au bois de mangrove. Chaque pièce est unique.</div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Mode de livraison</div>
+          <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;">
+            <input type="radio" name="delivery" checked style="accent-color:var(--terr);"/> Livraison à domicile (+1 500 FCFA)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="radio" name="delivery" style="accent-color:var(--terr);"/> Retrait en atelier (gratuit) 📍 Médina, Dakar
+          </label>
+        </div>
+
+        <div class="qty-control">
+          <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Quantité</div>
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-val" id="qty">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+          <span style="font-size:12px;color:var(--green);">✓ 4 en stock</span>
+        </div>
+
+        <button class="btn-gold" style="width:100%;justify-content:center;padding:16px;font-size:15px;margin-bottom:12px;" onclick="showToast('Ajouté au panier ! 🛒');go('p-cart')">
+          Ajouter au panier
+        </button>
+        <button class="btn-ghost" style="width:100%;justify-content:center;padding:14px;color:var(--terr);border-color:var(--terr);" onclick="showToast('Sauvegardé dans vos favoris ❤️')">
+          ♡ Ajouter aux favoris
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 4 : ARTISANS
+══════════════════════════════════════════════════════ -->
+<div id="p-artisans" class="page">
+  <nav>
+    <div class="nav-logo" onclick="go('p-home')">Artik<span>a</span></div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="go('p-home')">Accueil</span>
+      <span class="nav-link" onclick="go('p-shop')">Boutique</span>
+      <span class="nav-link" style="color:var(--terr);font-weight:600;">Artisans</span>
+    </div>
+    <button class="nav-btn" onclick="go('p-login')">Mon compte</button>
+  </nav>
+  <div class="section">
+    <div class="section-header">
+      <div><div class="section-title">Nos artisans</div><div class="section-sub">127 créateurs vérifiés à travers le Sénégal</div></div>
+    </div>
+    <div class="filters-bar">
+      <input class="search-bar" placeholder="🔍  Rechercher un artisan..."/>
+      <select class="filter-select"><option>Toutes catégories</option><option>Poterie</option><option>Textile</option><option>Bijoux</option></select>
+      <select class="filter-select"><option>Toutes régions</option><option>Dakar</option><option>Saint-Louis</option><option>Saly</option></select>
+    </div>
+    <div class="artisans-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+      <div class="artisan-card"><div class="artisan-avatar">A</div><div class="artisan-name">Aminata Diallo</div><div class="artisan-meta">Poterie · Dakar</div><span class="badge-verified">✓ Vérifié</span><div style="margin-top:12px;font-size:12px;color:var(--muted);">14 créations · ⭐ 4.9</div></div>
+      <div class="artisan-card"><div class="artisan-avatar">M</div><div class="artisan-name">Moussa Sarr</div><div class="artisan-meta">Textile · Saint-Louis</div><span class="badge-verified">✓ Vérifié</span><div style="margin-top:12px;font-size:12px;color:var(--muted);">8 créations · ⭐ 4.7</div></div>
+      <div class="artisan-card"><div class="artisan-avatar">F</div><div class="artisan-name">Fatou Ndiaye</div><div class="artisan-meta">Bijoux · Saly</div><span class="badge-verified">✓ Vérifié</span><div style="margin-top:12px;font-size:12px;color:var(--muted);">22 créations · ⭐ 5.0</div></div>
+      <div class="artisan-card"><div class="artisan-avatar">I</div><div class="artisan-name">Ibrahima Koné</div><div class="artisan-meta">Sculpture · Dakar</div><span class="badge-verified">✓ Vérifié</span><div style="margin-top:12px;font-size:12px;color:var(--muted);">6 créations · ⭐ 4.8</div></div>
+      <div class="artisan-card"><div class="artisan-avatar">O</div><div class="artisan-name">Omar Gueye</div><div class="artisan-meta">Maroquinerie · Dakar</div><span class="badge-verified">✓ Vérifié</span><div style="margin-top:12px;font-size:12px;color:var(--muted);">11 créations · ⭐ 4.6</div></div>
+      <div class="artisan-card"><div class="artisan-avatar">R</div><div class="artisan-name">Rokhaya Fall</div><div class="artisan-meta">Gastronomie · Saly</div><span class="badge-verified">✓ Vérifié</span><div style="margin-top:12px;font-size:12px;color:var(--muted);">5 créations · ⭐ 4.9</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 5 : PANIER
+══════════════════════════════════════════════════════ -->
+<div id="p-cart" class="page">
+  <nav>
+    <div class="nav-logo" onclick="go('p-home')">Artik<span>a</span></div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="go('p-shop')">Boutique</span>
+    </div>
+    <button class="nav-btn outline" onclick="go('p-home')">Continuer mes achats</button>
+  </nav>
+  <div class="cart-layout">
+    <div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:26px;margin-bottom:24px;">Mon panier <span style="font-size:16px;color:var(--muted);font-family:'DM Sans',sans-serif;">(2 articles)</span></h2>
+      <div class="cart-items">
+        <div class="cart-item">
+          <div class="cart-item-img">🏺</div>
+          <div>
+            <div class="cart-item-name">Vase Terracotta Traditionnel</div>
+            <div class="cart-item-artisan">Aminata Diallo · Livraison à domicile</div>
+            <div class="qty-control" style="margin:8px 0 0;">
+              <button class="qty-btn">−</button>
+              <span class="qty-val">1</span>
+              <button class="qty-btn">+</button>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cart-item-price">12 500 FCFA</div>
+            <div style="font-size:12px;color:var(--danger);margin-top:8px;cursor:pointer;">Supprimer</div>
+          </div>
+        </div>
+        <div class="cart-item">
+          <div class="cart-item-img">💍</div>
+          <div>
+            <div class="cart-item-name">Collier Perles Baoulé</div>
+            <div class="cart-item-artisan">Fatou Ndiaye · Retrait en atelier</div>
+            <div class="qty-control" style="margin:8px 0 0;">
+              <button class="qty-btn">−</button>
+              <span class="qty-val">2</span>
+              <button class="qty-btn">+</button>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="cart-item-price">13 000 FCFA</div>
+            <div style="font-size:12px;color:var(--danger);margin-top:8px;cursor:pointer;">Supprimer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cart-summary">
+      <h3 style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:20px;">Récapitulatif</h3>
+      <div class="summary-row"><span>Sous-total</span><span>25 500 FCFA</span></div>
+      <div class="summary-row"><span>Livraison</span><span>1 500 FCFA</span></div>
+      <div class="summary-row"><span>Retrait atelier</span><span>Gratuit</span></div>
+      <div class="summary-row total"><span>Total</span><span>27 000 FCFA</span></div>
+      <div class="payment-methods">
+        <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">Mode de paiement</div>
+        <div class="pay-method selected">
+          <div class="pay-icon">📱</div>
+          <div><div class="pay-name">Wave Money</div><div class="pay-desc">Paiement mobile instantané</div></div>
+        </div>
+        <div class="pay-method" onclick="this.classList.toggle('selected')">
+          <div class="pay-icon">🤝</div>
+          <div><div class="pay-name">Payer à la livraison</div><div class="pay-desc">Cash ou Mobile Money</div></div>
+        </div>
+      </div>
+      <button class="btn-gold" style="width:100%;justify-content:center;padding:16px;margin-top:20px;font-size:15px;" onclick="showToast('Commande confirmée ! SMS envoyé 📱')">
+        Confirmer la commande →
+      </button>
+      <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px;">🔒 Paiement sécurisé · HTTPS</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 6 : DASHBOARD ARTISAN
+══════════════════════════════════════════════════════ -->
+<div id="p-dashboard" class="page">
+  <div class="dashboard">
+    <div class="dash-sidebar">
+      <div class="dash-logo" onclick="go('p-home')">Artika</div>
+      <div class="dash-item active"><span class="dash-icon">⊞</span> Tableau de bord</div>
+      <div class="dash-item"><span class="dash-icon">📦</span> Mes produits</div>
+      <div class="dash-item"><span class="dash-icon">🛒</span> Commandes</div>
+      <div class="dash-item"><span class="dash-icon">💬</span> Messages</div>
+      <div class="dash-item"><span class="dash-icon">📊</span> Statistiques</div>
+      <div class="dash-item" style="margin-top:auto;"><span class="dash-icon">⚙️</span> Paramètres</div>
+      <div class="dash-item" onclick="go('p-home')"><span class="dash-icon">🏠</span> Accueil site</div>
+    </div>
+    <div class="dash-content">
+      <div class="dash-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div class="dash-title">Bonjour, Aminata 👋</div>
+            <div class="dash-sub">Voici l'état de votre boutique aujourd'hui</div>
+          </div>
+          <button class="btn-gold" onclick="showToast('Formulaire d\'ajout de produit ouvert')">+ Nouveau produit</button>
+        </div>
+        <div style="margin-top:12px;padding:10px 16px;background:rgba(45,90,39,.1);border-radius:8px;border:1px solid rgba(45,90,39,.2);display:inline-flex;align-items:center;gap:8px;">
+          <span class="badge-verified">✓ Artisan Vérifié</span>
+          <span style="font-size:13px;color:var(--green);">Votre badge est actif — votre boutique est visible</span>
+        </div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--c:var(--gold)"><div class="kpi-val">14</div><div class="kpi-lbl">Produits actifs</div></div>
+        <div class="kpi-card" style="--c:var(--green)"><div class="kpi-val">38</div><div class="kpi-lbl">Commandes ce mois</div></div>
+        <div class="kpi-card" style="--c:var(--earth)"><div class="kpi-val">187 500</div><div class="kpi-lbl">FCFA de ventes</div></div>
+        <div class="kpi-card" style="--c:var(--danger)"><div class="kpi-val">2</div><div class="kpi-lbl">Stocks critiques ⚠️</div></div>
+      </div>
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;">Commandes récentes</div>
+        <span style="font-size:13px;color:var(--earth);cursor:pointer;">Voir tout →</span>
+      </div>
+      <div class="orders-table">
+        <div class="table-header"><span>#</span><span>Produit</span><span>Montant</span><span>Statut</span><span>Date</span></div>
+        <div class="table-row"><span>#1042</span><span>Vase Terracotta</span><span>12 500 FCFA</span><span><span class="status-badge s-preparing">En préparation</span></span><span style="color:var(--muted);">Auj.</span></div>
+        <div class="table-row"><span>#1041</span><span>Bol Émaillé ×2</span><span>9 000 FCFA</span><span><span class="status-badge s-confirmed">Confirmée</span></span><span style="color:var(--muted);">Hier</span></div>
+        <div class="table-row"><span>#1040</span><span>Jarre Décorative</span><span>18 000 FCFA</span><span><span class="status-badge s-shipped">Expédiée</span></span><span style="color:var(--muted);">02/06</span></div>
+        <div class="table-row"><span>#1039</span><span>Coupelle Bleue</span><span>6 500 FCFA</span><span><span class="status-badge s-delivered">Livrée</span></span><span style="color:var(--muted);">01/06</span></div>
+        <div class="table-row"><span>#1038</span><span>Vase Terracotta</span><span>12 500 FCFA</span><span><span class="status-badge s-received">Reçue</span></span><span style="color:var(--muted);">01/06</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 7 : ADMIN
+══════════════════════════════════════════════════════ -->
+<div id="p-admin" class="page">
+  <div class="admin-header">
+    <div class="admin-logo" onclick="go('p-home')">Artika Admin</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:13px;color:rgba(255,255,255,.5);">Admin · Super utilisateur</span>
+      <button class="nav-btn outline" style="color:#fff;border-color:rgba(255,255,255,.2);" onclick="go('p-login')">Déconnexion</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="admin-sidebar">
+      <div class="admin-item active"><span>⊞</span> Tableau de bord</div>
+      <div class="admin-item"><span>✓</span> Vérifier artisans</div>
+      <div class="admin-item"><span>👥</span> Utilisateurs</div>
+      <div class="admin-item"><span>📦</span> Produits</div>
+      <div class="admin-item"><span>🛒</span> Commandes</div>
+      <div class="admin-item"><span>📊</span> Statistiques</div>
+      <div class="admin-item" onclick="go('p-home')"><span>🏠</span> Voir le site</div>
+    </div>
+    <div class="admin-content">
+      <div style="margin-bottom:24px;">
+        <div style="font-family:'Playfair Display',serif;font-size:24px;">Tableau de bord Admin</div>
+        <div style="color:var(--muted);font-size:13px;margin-top:4px;">Gestion globale de la plateforme Artika</div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--c:var(--gold)"><div class="kpi-val">127</div><div class="kpi-lbl">Artisans vérifiés</div></div>
+        <div class="kpi-card" style="--c:var(--earth)"><div class="kpi-val">843</div><div class="kpi-lbl">Produits publiés</div></div>
+        <div class="kpi-card" style="--c:var(--green)"><div class="kpi-val">1 204</div><div class="kpi-lbl">Commandes totales</div></div>
+        <div class="kpi-card" style="--c:var(--danger)"><div class="kpi-val">6</div><div class="kpi-lbl">En attente vérif.</div></div>
+      </div>
+      <div style="margin-bottom:16px;font-family:'Playfair Display',serif;font-size:18px;">
+        Artisans en attente de vérification
+        <span style="background:var(--danger);color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;padding:2px 8px;border-radius:20px;margin-left:8px;">6</span>
+      </div>
+      <div class="artisan-verify-list">
+        <div class="verify-row">
+          <div class="verify-avatar">S</div>
+          <div class="verify-info">
+            <div class="verify-name">Samba Diop</div>
+            <div class="verify-meta">Maroquinerie · Dakar · Inscrit il y a 2 jours</div>
+          </div>
+          <div class="verify-actions">
+            <button class="btn-approve" onclick="showToast('✅ Badge accordé à Samba Diop')">✓ Approuver</button>
+            <button class="btn-reject" onclick="showToast('❌ Demande rejetée')">✗ Refuser</button>
+          </div>
+        </div>
+        <div class="verify-row">
+          <div class="verify-avatar">M</div>
+          <div class="verify-info">
+            <div class="verify-name">Mariama Bah</div>
+            <div class="verify-meta">Textile · Tambacounda · Inscrit il y a 3 jours</div>
+          </div>
+          <div class="verify-actions">
+            <button class="btn-approve" onclick="showToast('✅ Badge accordé à Mariama Bah')">✓ Approuver</button>
+            <button class="btn-reject" onclick="showToast('❌ Demande rejetée')">✗ Refuser</button>
+          </div>
+        </div>
+        <div class="verify-row">
+          <div class="verify-avatar">A</div>
+          <div class="verify-info">
+            <div class="verify-name">Aliou Camara</div>
+            <div class="verify-meta">Sculpture · Saint-Louis · Inscrit il y a 5 jours</div>
+          </div>
+          <div class="verify-actions">
+            <button class="btn-approve" onclick="showToast('✅ Badge accordé à Aliou Camara')">✓ Approuver</button>
+            <button class="btn-reject" onclick="showToast('❌ Demande rejetée')">✗ Refuser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 8 : LOGIN
+══════════════════════════════════════════════════════ -->
+<div id="p-login" class="page">
+  <div class="login-page">
+    <div class="login-left">
+      <div class="login-brand">
+        <div class="login-brand-name">Artika</div>
+        <div class="login-brand-tagline">La plateforme e-commerce<br/>de l'artisanat sénégalais authentique</div>
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-form">
+        <div class="login-title">Bienvenue 👋</div>
+        <div class="login-sub">Connectez-vous ou créez votre compte</div>
+        <div class="role-tabs">
+          <div class="role-tab active" onclick="selectRole(this,'client')">🛍️ Client</div>
+          <div class="role-tab" onclick="selectRole(this,'artisan')">🏺 Artisan</div>
+          <div class="role-tab" onclick="selectRole(this,'admin')">⚙️ Admin</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email ou téléphone</label>
+          <input class="form-input" placeholder="email@exemple.com ou +221 77..."/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input class="form-input" type="password" placeholder="••••••••"/>
+        </div>
+        <button class="btn-submit" id="login-btn" onclick="handleLogin()">Se connecter →</button>
+        <div style="text-align:center;margin-top:20px;font-size:13px;color:var(--muted);">
+          Pas encore de compte ? <span style="color:var(--terr);cursor:pointer;font-weight:600;">S'inscrire gratuitement</span>
+        </div>
+        <div class="back-btn" style="justify-content:center;margin-top:16px;" onclick="go('p-home')">← Retour à l'accueil</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">🎉 Action effectuée</div>
+
+<script>
+let currentRole = 'client';
+
+function go(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function changeQty(delta) {
+  const el = document.getElementById('qty');
+  let v = parseInt(el.textContent) + delta;
+  if(v < 1) v = 1;
+  if(v > 4) v = 4;
+  el.textContent = v;
+}
+
+function selectRole(el, role) {
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentRole = role;
+  const btn = document.getElementById('login-btn');
+  if(role === 'artisan') btn.textContent = 'Accéder à mon espace artisan →';
+  else if(role === 'admin') btn.textContent = 'Accéder à l\'administration →';
+  else btn.textContent = 'Se connecter →';
+}
+
+function handleLogin() {
+  if(currentRole === 'artisan') go('p-dashboard');
+  else if(currentRole === 'admin') go('p-admin');
+  else { showToast('Connexion réussie ! Bienvenue 👋'); go('p-home'); }
+}
+
+// Cat chips toggle
+document.querySelectorAll('.cat-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    this.closest('.categories').querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

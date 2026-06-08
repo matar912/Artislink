@@ -22,6 +22,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Artisan;
 use App\Models\User;
 use App\Models\Visiteur;
+use App\Models\Produit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,14 +39,42 @@ class ConnexionControleur extends Controller
 
     /**
      * Page d'accueil du site.
-     * Elle affiche les deux boutons : "Je suis artisan" et "Je suis visiteur"
-     *
-     * Route : GET /
-     * Fichier Vue : resources/js/Pages/Accueil.vue
+     * Elle affiche les produits réels, les artisans et les liens d'inscription.
      */
     public function pageAccueil(): Response
     {
-        return Inertia::render('Accueil');
+        // On récupère les 4 derniers produits disponibles avec les infos de l'artisan
+        $produits = Produit::with(['artisan.user'])
+            ->where('est_disponible', true)
+            ->latest()
+            ->take(4)
+            ->get();
+
+        // On récupère les 4 derniers artisans inscrits pour la présentation
+        $artisans = Artisan::with('user')
+            ->latest()
+            ->take(4)
+            ->get();
+
+        // Statistiques réelles pour le Hero
+        $stats = [
+            'total_artisans' => Artisan::count(),
+            'total_produits' => Produit::count(),
+        ];
+
+        return Inertia::render('Accueil', [
+            'produits' => $produits,
+            'artisans' => $artisans,
+            'stats'    => $stats,
+        ]);
+    }
+
+    /**
+     * Page de choix du type de compte (artisan ou visiteur).
+     */
+    public function pageChoixInscription(): Response
+    {
+        return Inertia::render('Auth/RegisterChoice');
     }
 
     public function dashboardArtisan(): Response
@@ -131,6 +160,7 @@ class ConnexionControleur extends Controller
             'password'  => Hash::make($donnees['mot_de_passe']),
             'role'      => 'artisan',
             'telephone' => $donnees['telephone'] ?? null,
+            'est_actif' => true, // On active le compte immédiatement pour le prototype
         ]);
 
         // Étape 3 : Créer le profil artisan lié (champs simplifiés)
@@ -143,7 +173,7 @@ class ConnexionControleur extends Controller
 
         // Étape 4 : Rediriger vers la page de connexion
         return redirect()
-            ->route('connexion')
+            ->route('login')
             ->with('succes', 'Bienvenue sur Artislink ! Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.');
     }
 
@@ -169,7 +199,8 @@ class ConnexionControleur extends Controller
             'prenom'   => $donnees['prenom'],
             'email'    => $donnees['email'],
             'password' => Hash::make($donnees['mot_de_passe']),
-            'role'     => 'visiteur',   // ← TOUJOURS défini ici, côté serveur
+            'role'     => 'visiteur',
+            'est_actif'=> true, // Les visiteurs sont actifs par défaut
         ]);
 
         Visiteur::create([
@@ -179,7 +210,7 @@ class ConnexionControleur extends Controller
         ]);
 
         return redirect()
-            ->route('connexion')
+            ->route('login')
             ->with('succes', 'Bienvenue sur Artislink ! Votre compte visiteur a été créé. Vous pouvez maintenant vous connecter.');
     }
 
@@ -188,57 +219,73 @@ class ConnexionControleur extends Controller
     // =========================================================
 
     /**
-     * Traite le formulaire de connexion.
-     *
-     * Route : POST /connexion
-     *
-     * Ce qui se passe :
-     *   1. On vérifie email + mot de passe
-     *   2. On vérifie que le compte est actif
-     *   3. On redirige selon le rôle (artisan → son tableau de bord, etc.)
+     * Traite le formulaire de connexion avec un filtre strict par rôle.
      */
     public function connecter(Request $request): RedirectResponse
     {
-        // Validation basique
+        // Étape 1 : Validation des entrées
         $identifiants = $request->validate([
             'email'       => 'required|email',
             'mot_de_passe'=> 'required',
+            'role'        => 'required|string|in:visiteur,artisan,admin',
         ]);
 
-        // Tentative de connexion
-        // Auth::attempt() vérifie email + mot de passe dans la base
-        // Le 2ème paramètre = "se souvenir de moi"
-        $connexionReussie = Auth::attempt([
-            'email'    => $identifiants['email'],
-            'password' => $identifiants['mot_de_passe'],
-        ], $request->boolean('se_souvenir'));
+        // Étape 2 : Recherche de l'utilisateur par email (plus robuste)
+        $emailNettoye = strtolower(trim($identifiants['email']));
+        $utilisateur = User::where('email', $emailNettoye)->first();
 
-        if (! $connexionReussie) {
-            // Renvoie l'erreur au formulaire Vue
+        // Étape 3 : Vérification de l'existence et du mot de passe
+        if (!$utilisateur || !Hash::check($identifiants['mot_de_passe'], $utilisateur->password)) {
             return back()->withErrors([
                 'email' => 'Email ou mot de passe incorrect.',
             ]);
         }
 
-        $utilisateur = Auth::user();
+        // Étape 4 : FILTRE PAR RÔLE (Demande utilisateur)
+        // On vérifie si le rôle en base de données correspond au rôle sélectionné dans l'onglet
+        if ($utilisateur->role !== $identifiants['role']) {
+            $typeSelectionne = match($identifiants['role']) {
+                'artisan' => 'artisan',
+                'admin'   => 'administrateur',
+                default   => 'client',
+            };
+            
+            $vraiRole = match($utilisateur->role) {
+                'artisan' => 'un compte artisan',
+                'admin'   => 'un compte administrateur',
+                default   => 'un compte client',
+            };
 
-        // Vérifier que le compte est actif
+            return back()->withErrors([
+                'email' => "Vous tentez de vous connecter en tant que {$typeSelectionne}, mais cet email est lié à {$vraiRole}.",
+            ]);
+        }
+
+        // Étape 5 : Vérifier que le compte est actif
         if (! $utilisateur->est_actif) {
-            Auth::logout();
             return back()->withErrors([
                 'email' => 'Votre compte a été désactivé. Contactez l\'administrateur.',
             ]);
         }
 
-        // Régénérer la session (sécurité contre les attaques de fixation de session)
-        $request->session()->regenerate();
+        // Étape 6 : Tentative de connexion standard
+        if (Auth::attempt(['email' => $identifiants['email'], 'password' => $identifiants['mot_de_passe']], $request->boolean('se_souvenir'))) {
+            
+            // Régénérer la session pour la sécurité
+            $request->session()->regenerate();
 
-        // Rediriger vers le bon tableau de bord selon le rôle
-        return match ($utilisateur->role) {
-            'artisan' => redirect()->intended(route('artisan.tableau-bord')),
-            'admin'   => redirect()->intended(route('admin.tableau-bord')),
-            default   => redirect()->intended(route('visiteur.tableau-bord')),
-        };
+            // Rediriger vers le bon tableau de bord (redirection explicite sans intended pour éviter les conflits de rôles)
+            return match (Auth::user()->role) {
+                'artisan' => redirect()->route('artisan.tableau-bord')->with('succes', 'Heureux de vous revoir !'),
+                'admin'   => redirect()->route('admin.tableau-bord')->with('succes', 'Connexion admin réussie.'),
+                default   => redirect()->route('visiteur.boutique')->with('succes', 'Bienvenue sur votre espace !'),
+            };
+        }
+
+        // Si attempt échoue (cas improbable car password vérifié avant, mais sécurité supplémentaire)
+        return back()->withErrors([
+            'email' => 'Erreur lors de la création de la session.',
+        ]);
     }
 
     /**
@@ -254,6 +301,6 @@ class ConnexionControleur extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('accueil');
+        return redirect()->route('login')->with('succes', 'Vous avez été déconnecté.');
     }
 }

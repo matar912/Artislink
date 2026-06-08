@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        @apply font-sans bg-cream text-deep min-h-screen;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-serif;
+    }
+}
+
+@layer components {
+    .btn-artika {
+        @apply inline-flex items-center px-6 py-3 border border-transparent rounded-artika font-bold text-sm transition-all duration-150 shadow-artika;
+    }
+
+    .btn-artika-gold {
+        @apply btn-artika bg-gradient-to-br from-gold to-earth text-deep hover:scale-[1.02] hover:shadow-lg;
+    }
+
+    .btn-artika-terr {
+        @apply btn-artika bg-terr text-white hover:opacity-90;
+    }
+
+    .btn-artika-outline {
+        @apply btn-artika border-terr text-terr bg-transparent hover:bg-terr/5;
+    }
+
+    .card-artika {
+        @apply bg-white rounded-artika shadow-artika overflow-hidden transition-all duration-200;
+    }
+
+    .badge-artika-verified {
+        @apply inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green_artika/10 text-green_artika text-[10px] font-bold uppercase tracking-wider;
+    }
+}

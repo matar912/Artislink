@@ -16,7 +16,17 @@ class TableauBordControleur extends Controller
      */
     public function afficher()
     {
-        $artisan = Auth::user()->artisan()->with('user')->first();
+        $user = Auth::user();
+        $artisan = $user->artisan()->with('user')->first();
+        
+        // Sécurité : Si le profil artisan est manquant, on le crée
+        if (!$artisan) {
+            $artisan = \App\Models\Artisan::create([
+                'user_id' => $user->id,
+                'categorie' => 'À définir',
+            ]);
+            $artisan->load('user');
+        }
         
         // On récupère les commandes qui contiennent au moins un produit de cet artisan
         $commandes = Commande::whereHas('produits', function($q) use ($artisan) {
@@ -36,7 +46,15 @@ class TableauBordControleur extends Controller
      */
     public function listerCommandes()
     {
-        $artisan = Auth::user()->artisan;
+        $user = Auth::user();
+        $artisan = $user->artisan;
+
+        if (!$artisan) {
+            $artisan = \App\Models\Artisan::create([
+                'user_id' => $user->id,
+                'categorie' => 'À définir',
+            ]);
+        }
 
         $commandes = Commande::whereHas('produits', function($q) use ($artisan) {
             $q->where('artisan_id', $artisan->id);
@@ -54,8 +72,14 @@ class TableauBordControleur extends Controller
      */
     public function changerStatut(Request $request, Commande $commande)
     {
+        $user = Auth::user();
+        $artisan = $user->artisan;
+
+        if (!$artisan) {
+            abort(403, "Profil artisan non trouvé.");
+        }
+
         // Vérifier que la commande contient bien des produits de cet artisan
-        $artisan = Auth::user()->artisan;
         $appartientALartisan = $commande->produits()->where('artisan_id', $artisan->id)->exists();
 
         if (!$appartientALartisan) {
@@ -68,6 +92,8 @@ class TableauBordControleur extends Controller
 
         $commande->update(['statut' => $request->statut]);
 
-        return back()->with('success', 'Statut de la commande mis à jour.');
+        event(new \App\Events\CommandeStatutMisAJour($commande));
+
+        return back()->with('succes', 'Statut de la commande mis à jour.');
     }
 }

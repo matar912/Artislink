@@ -1,103 +1,165 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
-import FlashMessages from '@/Components/FlashMessages.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     artisan: any;
     commandes: any[];
+    auth: any;
 }>();
+
+onMounted(() => {
+    if (window.Echo) {
+        window.Echo.private(`user.${props.auth.user.id}`)
+            .listen('NouvelleCommandeRecue', (e: any) => {
+                router.reload({ only: ['commandes'] });
+            });
+    }
+});
+
+const getStatusClass = (status: string) => {
+    switch (status) {
+        case 'confirmee': return 'bg-green_artika/10 text-green_artika';
+        case 'expediee': return 'bg-gold/15 text-gold';
+        case 'livree': return 'bg-green_artika/20 text-green_artika';
+        case 'annulee': return 'bg-red-100 text-red-700';
+        default: return 'bg-sand text-muted_artika';
+    }
+};
 </script>
 
 <template>
-    <Head title="Tableau de Bord Artisan" />
+    <Head title="Tableau de Bord — Artika" />
 
-    <div class="min-h-screen bg-gray-100">
-        <FlashMessages />
-        <!-- Barre de navigation simple -->
-        <nav class="bg-indigo-900 text-white p-4 shadow-md">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="text-2xl font-bold">Artislink <span class="text-sm font-normal text-indigo-300">| Espace Artisan</span></div>
-                <div class="flex items-center space-x-6">
-                    <Link :href="route('artisan.produits.liste')" class="hover:text-indigo-300">Mes Produits</Link>
-                    <Link :href="route('artisan.commandes.liste')" class="hover:text-indigo-300">Commandes</Link>
-                    <Link :href="route('deconnexion')" method="post" as="button" class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition">Déconnexion</Link>
+    <AuthenticatedLayout>
+        <template #header>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <h2 class="font-serif text-3xl text-deep">Bonjour, {{ artisan.user.prenom }} 👋</h2>
+                    <p class="text-muted_artika text-sm mt-1">Voici l'état de votre boutique aujourd'hui.</p>
                 </div>
-            </div>
-        </nav>
-
-        <main class="max-w-7xl mx-auto py-10 px-6">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-800">Bienvenue, {{ artisan.user.prenom }} !</h1>
-                <div class="flex space-x-4">
-                    <Link :href="route('artisan.produits.formulaire-creation')" class="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-indigo-700 transition flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                        </svg>
-                        Ajouter un produit
-                    </Link>
-                    <Link :href="route('artisan.profil.formulaire')" class="bg-white border border-gray-200 text-gray-700 px-6 py-2 rounded-xl font-bold hover:bg-gray-50 transition flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                        </svg>
-                        Modifier mon profil
+                <div class="flex items-center gap-3">
+                    <div class="hidden md:flex items-center gap-2 px-4 py-2 bg-green_artika/10 rounded-lg border border-green_artika/20">
+                        <span class="badge-artika-verified">✓ Vérifié</span>
+                        <span class="text-xs font-bold text-green_artika uppercase tracking-wider">Boutique Active</span>
+                    </div>
+                    <Link :href="route('artisan.produits.formulaire-creation')" class="btn-artika-gold py-2.5 px-5">
+                        + Nouveau produit
                     </Link>
                 </div>
             </div>
+        </template>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                    <div class="text-gray-500 text-sm uppercase font-bold mb-1">Note Moyenne</div>
-                    <div class="text-3xl font-bold text-indigo-900">{{ artisan.note_moyenne }} / 5</div>
+        <div class="space-y-10">
+            <!-- KPI Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-artika shadow-artika border-l-4 border-gold">
+                    <p class="font-serif text-3xl font-bold text-deep">{{ artisan.note_moyenne || '0.0' }}</p>
+                    <p class="text-[10px] font-bold text-muted_artika uppercase tracking-widest mt-1">Note Moyenne</p>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                    <div class="text-gray-500 text-sm uppercase font-bold mb-1">Avis Reçus</div>
-                    <div class="text-3xl font-bold text-indigo-900">{{ artisan.nombre_avis }}</div>
+
+                <div class="bg-white p-6 rounded-artika shadow-artika border-l-4 border-green_artika">
+                    <p class="font-serif text-3xl font-bold text-deep">{{ commandes.length }}</p>
+                    <p class="text-[10px] font-bold text-muted_artika uppercase tracking-widest mt-1">Commandes</p>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                    <div class="text-gray-500 text-sm uppercase font-bold mb-1">Statut Profil</div>
-                    <div class="flex items-center mt-1">
-                        <span :class="artisan.est_actif ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'" class="px-3 py-1 rounded-full text-xs font-bold">
-                            {{ artisan.est_actif ? 'ACTIF' : 'INACTIF' }}
-                        </span>
+
+                <div class="bg-white p-6 rounded-artika shadow-artika border-l-4 border-earth">
+                    <p class="font-serif text-3xl font-bold text-deep">
+                        {{ artisan.nombre_avis || 0 }}
+                    </p>
+                    <p class="text-[10px] font-bold text-muted_artika uppercase tracking-widest mt-1">Avis Clients</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-artika shadow-artika border-l-4 border-terr">
+                    <p class="font-serif text-3xl font-bold text-deep">14</p>
+                    <p class="text-[10px] font-bold text-muted_artika uppercase tracking-widest mt-1">Produits Actifs</p>
+                </div>
+            </div>
+
+            <!-- Orders Table Section -->
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-serif text-2xl text-deep">Commandes récentes</h3>
+                    <Link :href="route('artisan.commandes.liste')" class="text-xs font-bold text-earth uppercase tracking-widest hover:underline">Voir tout →</Link>
+                </div>
+
+                <div class="bg-white rounded-artika shadow-artika overflow-hidden">
+                    <div v-if="commandes.length === 0" class="p-20 text-center">
+                        <span class="text-5xl block mb-4">🛒</span>
+                        <p class="text-muted_artika font-medium">Vous n'avez pas encore reçu de commande.</p>
+                    </div>
+                    <div v-else class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-sand/50 text-[10px] font-bold text-muted_artika uppercase tracking-widest">
+                                    <th class="px-6 py-4">Client</th>
+                                    <th class="px-6 py-4">Produits</th>
+                                    <th class="px-6 py-4">Montant</th>
+                                    <th class="px-6 py-4 text-center">Statut</th>
+                                    <th class="px-6 py-4 text-right">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-earth/10">
+                                <tr v-for="commande in commandes" :key="commande.id" class="hover:bg-sand/20 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-earth/10 flex items-center justify-center font-bold text-earth text-xs">
+                                                {{ commande.visiteur.user.prenom[0] }}
+                                            </div>
+                                            <span class="text-sm font-bold text-deep">{{ commande.visiteur.user.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-xs text-muted_artika">
+                                            {{ commande.produits.length }} article(s)
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm font-bold text-terr">{{ Number(commande.montant_total).toLocaleString() }} <span class="text-[10px] font-normal uppercase">FCFA</span></span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span :class="getStatusClass(commande.statut)" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                            {{ commande.statut }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <span class="text-xs text-muted_artika font-medium">{{ new Date(commande.created_at).toLocaleDateString() }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-gray-800">Dernières commandes reçues</h2>
-                    <Link :href="route('artisan.commandes.liste')" class="text-indigo-600 text-sm font-bold hover:underline">Voir tout</Link>
-                </div>
-                <div class="p-6">
-                    <div v-if="commandes.length === 0" class="text-center py-10 text-gray-500">
-                        Aucune commande pour le moment.
+            <!-- Quick Actions / Support -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-deep rounded-artika p-8 text-white relative overflow-hidden group">
+                    <div class="relative z-10">
+                        <h4 class="font-serif text-2xl mb-2">Besoin d'aide ?</h4>
+                        <p class="text-white/50 text-sm mb-6 max-w-xs">Consultez notre guide de l'artisan pour booster vos ventes sur Artika.</p>
+                        <a href="#" class="inline-flex items-center gap-2 text-gold font-bold text-xs uppercase tracking-widest group-hover:translate-x-1 transition-transform">
+                            Lire le guide →
+                        </a>
                     </div>
-                    <table v-else class="w-full text-left">
-                        <thead>
-                            <tr class="text-gray-400 text-sm uppercase">
-                                <th class="pb-4">Commande #</th>
-                                <th class="pb-4">Client</th>
-                                <th class="pb-4">Montant</th>
-                                <th class="pb-4">Statut</th>
-                                <th class="pb-4">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-700">
-                            <tr v-for="commande in commandes" :key="commande.id" class="border-t border-gray-50">
-                                <td class="py-4 font-mono text-sm">#{{ commande.id }}</td>
-                                <td class="py-4 font-bold">{{ commande.visiteur.user.name }}</td>
-                                <td class="py-4">{{ commande.montant_total }} FCFA</td>
-                                <td class="py-4">
-                                    <span class="px-2 py-1 rounded-lg text-xs font-bold uppercase bg-gray-100 text-gray-600">
-                                        {{ commande.statut }}
-                                    </span>
-                                </td>
-                                <td class="py-4 text-sm">{{ new Date(commande.created_at).toLocaleDateString() }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-gold/5 rounded-full blur-3xl group-hover:bg-gold/10 transition-colors"></div>
+                </div>
+
+                <div class="bg-white rounded-artika p-8 border border-earth/10">
+                    <h4 class="font-serif text-2xl text-deep mb-4">Statut de l'atelier</h4>
+                    <div class="flex items-center justify-between p-4 bg-sand/30 rounded-xl">
+                        <div>
+                            <p class="text-sm font-bold text-deep">Visibilité publique</p>
+                            <p class="text-xs text-muted_artika">Votre profil est actuellement en ligne</p>
+                        </div>
+                        <div class="relative inline-flex items-center cursor-pointer">
+                            <div class="w-11 h-6 bg-green_artika rounded-full"></div>
+                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform translate-x-5"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </AuthenticatedLayout>
 </template>

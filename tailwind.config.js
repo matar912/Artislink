@@ -13,8 +13,25 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['DM Sans', 'Figtree', ...defaultTheme.fontFamily.sans],
+                serif: ['Playfair Display', ...defaultTheme.fontFamily.serif],
             },
+            colors: {
+                sand: '#f5e6c8',
+                earth: '#c17f3b',
+                terr: '#8b4513',
+                deep: '#1a0f00',
+                green_artika: '#2d5a27', // Renamed to avoid conflict with default green
+                gold: '#d4a017',
+                cream: '#fdf6e9',
+                muted_artika: '#7a6248',
+            },
+            borderRadius: {
+                'artika': '14px',
+            },
+            boxShadow: {
+                'artika': '0 4px 24px rgba(26,15,0,0.10)',
+            }
         },
     },
 
